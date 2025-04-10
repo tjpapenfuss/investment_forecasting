@@ -1,0 +1,4 @@
+pandas
+alpaca-py
+yfinance
+matplotlib
