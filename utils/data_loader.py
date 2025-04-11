@@ -3,7 +3,7 @@ from utils.date_utils import get_closest_trading_day
 import pandas as pd
 from datetime import datetime, timedelta
 
-def download_stock_data(tickers, start_date, end_date, pickle_file=None):
+def download_stock_data(tickers, start_date, end_date, pickle_file=None, tickers_source=None, top_n=0, interval="1d"):
     """
     Download daily stock price data for the specified tickers and date range.
     """
@@ -14,14 +14,18 @@ def download_stock_data(tickers, start_date, end_date, pickle_file=None):
     try:
         if(pickle_file is not None):
             stock_data = pd.read_pickle(pickle_file)
+        elif(tickers_source is not None):
+            stock_data = generate_stock_data(
+                tickers_source=tickers_source, 
+                start_date=start_date, 
+                end_date=end_date, 
+                interval=interval, 
+                top_n=top_n, 
+                to_pickle=False,
+             )
         else:
-            stock_data = yf.download(
-                tickers=tickers, 
-                start=start_buffer.strftime('%Y-%m-%d'), 
-                end=end_date, 
-                interval="1d", 
-                group_by='ticker'
-            )
+            print(f"Error downloading stock data. You must have a pickle file or a ticker source file.")
+            return None, tickers
         
         # Handle failed tickers
         valid_tickers = [ticker for ticker in tickers if ticker in stock_data.columns.levels[0]]
@@ -149,15 +153,25 @@ def extract_weights_from_csv(csv_file, top_n=10):
         print(f"Unexpected error occurred: {str(e)}")
         return {}
 
-# # Add weights to your existing ranked DataFrame
-# def add_weights_to_ranked_list(ranked_df, weights_dict):
-#     # Create a new column for the weights
-#     ranked_df['Portfolio_Weight'] = ranked_df['Ticker'].map(weights_dict)
+def generate_stock_data(tickers_source, start_date, end_date, interval="1d", top_n=500, to_pickle=False, save_location="pickle_files/top"):
+
+    # Get tickers from configuration
+    tickers = extract_top_tickers_from_csv(
+        csv_file=tickers_source, 
+        top_n=top_n
+    )
+
+    ticker_data = yf.download(
+                    tickers=tickers,
+                    start=start_date,
+                    end=end_date,
+                    interval=interval,
+                    group_by='ticker'
+                )
     
-#     # Calculate the weighted impact on the portfolio
-#     # ranked_df['Weighted_Impact'] = ranked_df['Percent_Change'] * ranked_df['Portfolio_Weight']
-    
-#     # Optional: Convert weights to percentage format for better readability
-#     ranked_df['Portfolio_Weight'] = round(ranked_df['Portfolio_Weight'] * 100, 2)
-    
-#     return ranked_df
+    if to_pickle is True:
+        ticker_data_location = f"{save_location}-{top_n}-{start_date}-{end_date}.pkl"
+        # Send data to pickle file for pickup later. 
+        ticker_data.to_pickle(ticker_data_location)
+
+    return ticker_data
