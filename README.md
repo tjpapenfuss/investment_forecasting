@@ -14,6 +14,31 @@ Investment Forecast Model allows you to simulate investment strategies with cust
 
 This model is especially useful for analyzing the benefits of tax-loss harvesting strategies across different market conditions.
 
+## Quick Start
+
+1. Set up your environment
+   ```bash
+   python -m venv venv
+   source venv/bin/activate
+   ```
+
+2. Install dependencies
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Update the configuration with necessary changes
+   - Update the custom allocation file (`custom_allocation.csv`) with your desired portfolio and corresponding weights
+   - Adjust investment amounts, dates (start and end date), and strategy parameters in the config file -> investment_forecasting/config/config.json
+   - Update top_n in the config file to the number of stocks to pull into the simulation model. Ex. if you select top_n=10 it will take the top 10 stocks determined by weight. 
+
+4. Run the simulation
+   ```bash
+   python main.py
+   ```
+
+   Note: You can adjust the start and end dates in the configuration to modify the simulation period.
+
 ## Project Structure
 
 ```
