@@ -200,6 +200,51 @@ The model generates several reports:
 3. **CSV Exports**: Detailed transaction and portfolio history data
 4. **Visualization**: Portfolio growth charts comparing against benchmark indices
 
+## Output Files
+
+The model outputs several CSV files that provide detailed information about your simulation run and a baseline SPY comparison:
+
+### Main Strategy Files
+
+1. **output/transactions.csv**: Records every transaction executed during the simulation
+   - Transaction date
+   - Type (deposit, buy, or sell)
+   - Amount ($)
+   - Description
+   - Ticker
+   - Shares
+   - Price
+   - Gain/Loss
+   - Gain/Loss %
+   - Days held
+
+2. **output/portfolio.csv**: Final portfolio composition at the end of the simulation
+   - Ticker symbols
+   - Initial shares purchased
+   - Remaining shares
+   - Current values
+   - Weights
+   - Performance metrics per asset
+
+3. **output/history.csv**: Monthly snapshot of your portfolio performance
+   - Date
+   - Cash on hand
+   - Investment value
+   - Total value
+   - Return metrics
+   - Cash allocation percentage
+   - Realized gain/losses
+   - Maximum drawdown
+
+### Benchmark Comparison
+
+The model also creates equivalent files for an SPY (S&P 500 ETF) baseline comparison:
+- spy_transactions.csv
+- spy_portfolio.csv
+- spy_history.csv
+
+These allow you to compare your strategy's performance against a standard market benchmark using the same starting parameters.
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
