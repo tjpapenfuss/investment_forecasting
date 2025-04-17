@@ -2,3 +2,6 @@ pandas
 alpaca-py
 yfinance
 matplotlib
+fastapi
+python-multipart
+uvicorn
